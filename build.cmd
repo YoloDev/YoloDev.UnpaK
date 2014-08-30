@@ -35,13 +35,14 @@ IF "%APPVEYOR_BUILD_VERSION%" == "" goto noversion
 IF NOT "%APPVEYOR_REPO_BRANCH%" == "master" goto wrongbranch
 IF NOT "%APPVEYOR_PULL_REQUEST_NUMBER%" == "" goto pullreq
 IF "%NUGET_SOURCE%" == "" goto end
-for %%x in ("%~dp0artifacts\build\*.%APPVEYOR_BUILD_VERSION%.nupkg") do (
+echo Publishing packages
+for %%x in ("%~dp0artifacts\build\*-%K_BUILD_VERSION%.nupkg") do (
 	echo Publishing "%%x"
 	%~dp0.nuget\NuGet.exe push "%%x" "%NUGET_API_KEY%" -Source "%NUGET_SOURCE%"
 )
 
 IF "%SYMBOL_SOURCE%" == "" goto end
-for %%x in ("%~dp0artifacts\build\*.%APPVEYOR_BUILD_VERSION%.symbols.nupkg") do (
+for %%x in ("%~dp0artifacts\build\*-%K_BUILD_VERSION%.symbols.nupkg") do (
 	echo Publishing "%%x"
 	%~dp0.nuget\NuGet.exe push "%%x" "%SYMBOL_API_KEY%" -Source "%SYMBOL_SOURCE%"
 )
