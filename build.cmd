@@ -41,11 +41,12 @@ for %%x in ("%~dp0artifacts\build\*-%K_BUILD_VERSION%.nupkg") do (
 	%~dp0.nuget\NuGet.exe push "%%x" "%NUGET_API_KEY%" -Source "%NUGET_SOURCE%"
 )
 
-IF "%SYMBOL_SOURCE%" == "" goto end
-for %%x in ("%~dp0artifacts\build\*-%K_BUILD_VERSION%.symbols.nupkg") do (
-	echo Publishing "%%x"
-	%~dp0.nuget\NuGet.exe push "%%x" "%SYMBOL_API_KEY%" -Source "%SYMBOL_SOURCE%"
-)
+REM Symbol packages doesn't work right now, due to the fact that I use source packages (see build 2)
+REM IF "%SYMBOL_SOURCE%" == "" goto end
+REM for %%x in ("%~dp0artifacts\build\*-%K_BUILD_VERSION%.symbols.nupkg") do (
+REM 	echo Publishing "%%x"
+REM 	%~dp0.nuget\NuGet.exe push "%%x" "%SYMBOL_API_KEY%" -Source "%SYMBOL_SOURCE%"
+REM )
 goto end
 
 :wrongbranch
