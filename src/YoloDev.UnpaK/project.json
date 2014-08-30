@@ -1,0 +1,25 @@
+﻿{
+  "version": "1.0.0-alpha4-*",
+  "authors": ["Alxandr"],
+  "description": "Unpack K projects for bootstrapping compilers",
+
+  "dependencies": {
+    "Microsoft.Framework.Runtime": "1.0.0-*",
+    "Microsoft.Framework.Runtime.Interfaces": "1.0.0-*",
+    "Microsoft.Framework.CommandLineUtils": "1.0.0-*"
+  },
+
+  "frameworks": {
+    "net451": { },
+    "k10": {
+      "dependencies": {
+        "System.Console": "4.0.0.0",
+        "System.Threading.Tasks": "4.0.10.0",
+        "System.IO": "4.0.0.0",
+        "System.IO.FileSystem": "4.0.10.0",
+        "System.Linq": "4.0.0.0",
+        "System.Collections": "4.0.10.0"
+      }
+    }
+  }
+}

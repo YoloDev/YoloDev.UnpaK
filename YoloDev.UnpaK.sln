@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.22013.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "YoloDev.UnpaK", "src\YoloDev.UnpaK\YoloDev.UnpaK.kproj", "{196F9143-A37F-4573-9BCF-07CA72B5728B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FE177E24-B643-4901-AC0A-B3F8857D5898}"
+	ProjectSection(SolutionItems) = preProject
+		build.cmd = build.cmd
+		makefile.shade = makefile.shade
+		NuGet.Config = NuGet.Config
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{196F9143-A37F-4573-9BCF-07CA72B5728B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{196F9143-A37F-4573-9BCF-07CA72B5728B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{196F9143-A37F-4573-9BCF-07CA72B5728B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{196F9143-A37F-4573-9BCF-07CA72B5728B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
