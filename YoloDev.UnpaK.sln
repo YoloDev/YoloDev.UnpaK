@@ -7,6 +7,7 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "YoloDev.UnpaK", "src\YoloDe
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FE177E24-B643-4901-AC0A-B3F8857D5898}"
 	ProjectSection(SolutionItems) = preProject
+		appveyor.yml = appveyor.yml
 		build.cmd = build.cmd
 		makefile.shade = makefile.shade
 		NuGet.Config = NuGet.Config

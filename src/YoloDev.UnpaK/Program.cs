@@ -180,8 +180,21 @@ namespace YoloDev.UnpaK
                 if (Path.GetExtension(fileRef.Name).ToLowerInvariant() == ".exe")
                     newPath = Path.ChangeExtension(newPath, ".exe");
 
-                if(!File.Exists(newPath))
+                if (!File.Exists(newPath))
+                {
                     File.Copy(fileRef.Path, newPath);
+                    var fileName = Path.GetFileNameWithoutExtension(fileRef.Path);
+                    foreach(var file in Directory.EnumerateFiles(Path.GetDirectoryName(fileRef.Path), fileName + ".*"))
+                    {
+                        if(Path.GetFileNameWithoutExtension(file) == fileName)
+                        {
+                            var ext = Path.GetExtension(file);
+                            var newFilePath = Path.Combine(dir, reference.Name + ext);
+                            if (!File.Exists(newFilePath))
+                                File.Copy(file, newFilePath);
+                        }
+                    }
+                }
                 return newPath;
             }
 
