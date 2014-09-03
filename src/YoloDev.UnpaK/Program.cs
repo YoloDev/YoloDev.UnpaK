@@ -33,8 +33,6 @@ namespace YoloDev.UnpaK
             app.HelpOption("-?|-h|--help");
             app.VersionOption("--version", GetVersion());
 
-            
-
             app.OnExecute(() =>
             {
                 var hostOptions = new DefaultHostOptions();
@@ -135,6 +133,7 @@ namespace YoloDev.UnpaK
                     var srcPaths = new List<string>();
                     var libPaths = new List<string>();
                     var aniPaths = new List<string>();
+                    var fxDefs = new List<string>();
 					
                     Directory.CreateDirectory(srcPath);
                     Directory.CreateDirectory(libPath);
@@ -182,12 +181,64 @@ namespace YoloDev.UnpaK
                     File.WriteAllLines(Path.Combine(outDir, "sources.txt"), srcPaths);
                     File.WriteAllLines(Path.Combine(outDir, "references.txt"), libPaths.Distinct());
                     
-                    if (optionANIs.HasValue()) {
+                    if (optionANIs.HasValue())
+                    {
                     	File.WriteAllLines(Path.Combine(outDir, "anis.txt"), aniPaths.Distinct());
                     }
                     
+                    var fxId = string.Empty;
+                    var fxVer = hostOptions.TargetFramework.Version;
+
+                    if (hostOptions.TargetFramework.Identifier == ".NETFramework")
+                    {
+                        fxId = "NET";
+		        	}
+                    else if (hostOptions.TargetFramework.Identifier == "Asp.Net")
+                    {
+                        fxId = "ASPNET";
+                    }
+                    else if (hostOptions.TargetFramework.Identifier == "Asp.NetCore")
+                    {
+                        fxId = "ASPNETCORE";
+                    }
+                    else if (hostOptions.TargetFramework.Identifier == ".NETPortable")
+                    {
+                        fxId = "PORTABLE";
+                    }
+                    else if (hostOptions.TargetFramework.Identifier == ".NETCore")
+                    {
+                        fxId = "NETCORE";
+                    }
+                    else if (hostOptions.TargetFramework.Identifier == "WindowsPhone")
+                    {
+                        fxId = "WP";
+                    }
+                    else if (hostOptions.TargetFramework.Identifier == "MonoTouch")
+                    {
+                        fxId = "IOS";
+                    }
+                    else if (hostOptions.TargetFramework.Identifier == "MonoAndroid")
+                    {
+                        fxId = "ANDROID";
+                    }
+                    else if (hostOptions.TargetFramework.Identifier == "Silverlight")
+                    {
+                        fxId = "SL";
+                    }
+                    else
+                    {
+                        fxId = hostOptions.TargetFramework.Identifier;
+                    }
+	        	    
+	        	    fxDefs.Add(string.Format("{0}{1}{2}", new object[] {fxId, fxVer.Major.ToString(), fxVer.Minor.ToString()}));
+	        	    if (fxVer.Build > 0) {
+	        	    	fxDefs.Add(string.Format("{0}{1}{2}{3}", new object[] {fxId, fxVer.Major.ToString(), fxVer.Minor.ToString(), fxVer.Build.ToString()}));
+	        	    }
+                    
+                    File.WriteAllLines(Path.Combine(outDir, "fxdefines.txt"), fxDefs);
                     File.WriteAllLines(Path.Combine(outDir, "version.txt"), new[] { host.Project.Version.Version.ToString() });
                     File.WriteAllLines(Path.Combine(outDir, "name.txt"), new[] { host.Project.Name });
+                    File.WriteAllLines(Path.Combine(outDir, "fxmoniker.txt"), new[] { hostOptions.TargetFramework.ToString() });
                 }
 
                 return 0;
