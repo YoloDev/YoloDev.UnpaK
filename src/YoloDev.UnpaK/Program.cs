@@ -230,11 +230,11 @@ namespace YoloDev.UnpaK
                         fxId = hostOptions.TargetFramework.Identifier;
                     }
 	        	    
-	        	    fxDefs.Add(string.Format("{0}{1}{2}", new object[] {fxId, fxVer.Major.ToString(), fxVer.Minor.ToString()}));
-	        	    if (fxVer.Build > 0) {
-	        	    	fxDefs.Add(string.Format("{0}{1}{2}{3}", new object[] {fxId, fxVer.Major.ToString(), fxVer.Minor.ToString(), fxVer.Build.ToString()}));
-	        	    }
-                    
+                    fxDefs.Add(string.Format("{0}{1}{2}", new object[] {fxId, fxVer.Major.ToString(), fxVer.Minor.ToString()}));
+                    if (fxVer.Build > 0) {
+                        fxDefs.Add(string.Format("{0}{1}{2}{3}", new object[] {fxId, fxVer.Major.ToString(), fxVer.Minor.ToString(), fxVer.Build.ToString()}));
+                    }
+
                     File.WriteAllLines(Path.Combine(outDir, "fxdefines.txt"), fxDefs);
                     File.WriteAllLines(Path.Combine(outDir, "version.txt"), new[] { host.Project.Version.Version.ToString() });
                     File.WriteAllLines(Path.Combine(outDir, "name.txt"), new[] { host.Project.Name });
