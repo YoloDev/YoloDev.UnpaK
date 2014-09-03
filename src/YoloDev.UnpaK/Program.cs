@@ -163,6 +163,8 @@ namespace YoloDev.UnpaK
 
                     File.WriteAllLines(Path.Combine(outDir, "sources.txt"), srcPaths);
                     File.WriteAllLines(Path.Combine(outDir, "references.txt"), libPaths.Distinct());
+                    File.WriteAllLines(Path.Combine(outDir, "version.txt"), new[] { host.Project.Version.Version.ToString() });
+                    File.WriteAllLines(Path.Combine(outDir, "name.txt"), new[] { host.Project.Name });
                 }
 
                 return 0;
