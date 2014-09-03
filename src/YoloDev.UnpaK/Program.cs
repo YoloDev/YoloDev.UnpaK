@@ -28,6 +28,7 @@ namespace YoloDev.UnpaK
             var optionPackages = app.Option("--packages <PACKAGE_DIR>", "Directory containing packages", CommandOptionType.SingleValue);
             var optionConfiguration = app.Option("--configuration <CONFIGURATION>", "The configuration to run under", CommandOptionType.SingleValue);
             var optionANIs = app.Option("--ani", "Forces ANI assemblies to be listed in anis.txt and not in references.txt", CommandOptionType.NoValue);
+            var optionFx = app.Option("--framework <FRAMEWORK>", "The framework to target (overrides the default of Asp.Net 5.0)", CommandOptionType.SingleValue);
             var optionOut = app.Option("-o|--out <OUT_DIR>", "Output directory", CommandOptionType.SingleValue);
             app.HelpOption("-?|-h|--help");
             app.VersionOption("--version", GetVersion());
@@ -40,7 +41,15 @@ namespace YoloDev.UnpaK
                 hostOptions.WatchFiles = false;
                 hostOptions.PackageDirectory = optionPackages.Value();
 
-                hostOptions.TargetFramework = _environment.TargetFramework;
+                if (optionFx.HasValue())
+                {
+                    hostOptions.TargetFramework = Project.ParseFrameworkName(optionFx.Value());
+                }
+                else
+                {
+                    hostOptions.TargetFramework = _environment.TargetFramework;
+                }
+
                 hostOptions.Configuration = optionConfiguration.Value() ?? _environment.Configuration ?? "Debug";
                 hostOptions.ApplicationBaseDirectory = _environment.ApplicationBasePath;
 
