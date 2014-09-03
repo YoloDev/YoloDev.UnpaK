@@ -192,7 +192,7 @@ namespace YoloDev.UnpaK
                     if (hostOptions.TargetFramework.Identifier == ".NETFramework")
                     {
                         fxId = "NET";
-		        	}
+                    }
                     else if (hostOptions.TargetFramework.Identifier == "Asp.Net")
                     {
                         fxId = "ASPNET";
