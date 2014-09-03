@@ -125,7 +125,7 @@ namespace YoloDev.UnpaK
                     var extSrcPath = Path.Combine(libPath, "src");
                     var srcPaths = new List<string>();
                     var libPaths = new List<string>();
-					var aniPaths = new List<string>();
+                    var aniPaths = new List<string>();
 					
                     Directory.CreateDirectory(srcPath);
                     Directory.CreateDirectory(libPath);
@@ -165,8 +165,8 @@ namespace YoloDev.UnpaK
                             }
                             else
                             {
- 	                           libPaths.Add(Unpack(mref, libPath));
- 	                        }
+                                libPaths.Add(Unpack(mref, libPath));
+                            }
                         }
                     }
 
