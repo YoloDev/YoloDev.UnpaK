@@ -11,7 +11,7 @@ namespace YoloDev.UnpaK
         {
             string result = System.IO.Path.GetFullPath(filepath);
 
-            result = result.TrimEnd(new[] { '\\' });
+            result = result.TrimEnd(new[] { System.IO.Path.DirectorySeparatorChar });
 
             return result;
         }

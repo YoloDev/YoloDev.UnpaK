@@ -27,6 +27,7 @@ namespace YoloDev.UnpaK
             app.Name = "YoloDev.UnpaK";
             var optionPackages = app.Option("--packages <PACKAGE_DIR>", "Directory containing packages", CommandOptionType.SingleValue);
             var optionConfiguration = app.Option("--configuration <CONFIGURATION>", "The configuration to run under", CommandOptionType.SingleValue);
+            var optionANIs = app.Option("--ani", "Forces ANI assemblies to be listed in anis.txt and not in references.txt", CommandOptionType.NoValue);
             var optionOut = app.Option("-o|--out <OUT_DIR>", "Output directory", CommandOptionType.SingleValue);
             app.HelpOption("-?|-h|--help");
             app.VersionOption("--version", GetVersion());
@@ -124,7 +125,8 @@ namespace YoloDev.UnpaK
                     var extSrcPath = Path.Combine(libPath, "src");
                     var srcPaths = new List<string>();
                     var libPaths = new List<string>();
-
+                    var aniPaths = new List<string>();
+					
                     Directory.CreateDirectory(srcPath);
                     Directory.CreateDirectory(libPath);
 
@@ -157,12 +159,24 @@ namespace YoloDev.UnpaK
 
                         foreach (var mref in dep.References)
                         {
-                            libPaths.Add(Unpack(mref, libPath));
+                            if (optionANIs.HasValue() && (mref is IMetadataEmbeddedReference))
+                            {
+                            	aniPaths.Add(Unpack(mref, libPath));
+                            }
+                            else
+                            {
+                                libPaths.Add(Unpack(mref, libPath));
+                            }
                         }
                     }
 
                     File.WriteAllLines(Path.Combine(outDir, "sources.txt"), srcPaths);
                     File.WriteAllLines(Path.Combine(outDir, "references.txt"), libPaths.Distinct());
+                    
+                    if (optionANIs.HasValue()) {
+                    	File.WriteAllLines(Path.Combine(outDir, "anis.txt"), aniPaths.Distinct());
+                    }
+                    
                     File.WriteAllLines(Path.Combine(outDir, "version.txt"), new[] { host.Project.Version.Version.ToString() });
                     File.WriteAllLines(Path.Combine(outDir, "name.txt"), new[] { host.Project.Name });
                 }
