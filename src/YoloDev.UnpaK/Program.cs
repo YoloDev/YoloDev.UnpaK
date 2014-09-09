@@ -28,11 +28,10 @@ namespace YoloDev.UnpaK
             var optionPackages = app.Option("--packages <PACKAGE_DIR>", "Directory containing packages", CommandOptionType.SingleValue);
             var optionConfiguration = app.Option("--configuration <CONFIGURATION>", "The configuration to run under", CommandOptionType.SingleValue);
             var optionANIs = app.Option("--ani", "Forces ANI assemblies to be listed in anis.txt and not in references.txt", CommandOptionType.NoValue);
+            var optionFx = app.Option("--framework <FRAMEWORK>", "The framework to target (overrides the default of Asp.Net 5.0)", CommandOptionType.SingleValue);
             var optionOut = app.Option("-o|--out <OUT_DIR>", "Output directory", CommandOptionType.SingleValue);
             app.HelpOption("-?|-h|--help");
             app.VersionOption("--version", GetVersion());
-
-            
 
             app.OnExecute(() =>
             {
@@ -40,7 +39,15 @@ namespace YoloDev.UnpaK
                 hostOptions.WatchFiles = false;
                 hostOptions.PackageDirectory = optionPackages.Value();
 
-                hostOptions.TargetFramework = _environment.TargetFramework;
+                if (optionFx.HasValue())
+                {
+                    hostOptions.TargetFramework = Project.ParseFrameworkName(optionFx.Value());
+                }
+                else
+                {
+                    hostOptions.TargetFramework = _environment.TargetFramework;
+                }
+
                 hostOptions.Configuration = optionConfiguration.Value() ?? _environment.Configuration ?? "Debug";
                 hostOptions.ApplicationBaseDirectory = _environment.ApplicationBasePath;
 
@@ -126,6 +133,7 @@ namespace YoloDev.UnpaK
                     var srcPaths = new List<string>();
                     var libPaths = new List<string>();
                     var aniPaths = new List<string>();
+                    var fxDefs = new List<string>();
 					
                     Directory.CreateDirectory(srcPath);
                     Directory.CreateDirectory(libPath);
@@ -173,12 +181,64 @@ namespace YoloDev.UnpaK
                     File.WriteAllLines(Path.Combine(outDir, "sources.txt"), srcPaths);
                     File.WriteAllLines(Path.Combine(outDir, "references.txt"), libPaths.Distinct());
                     
-                    if (optionANIs.HasValue()) {
+                    if (optionANIs.HasValue())
+                    {
                     	File.WriteAllLines(Path.Combine(outDir, "anis.txt"), aniPaths.Distinct());
                     }
                     
+                    var fxId = string.Empty;
+                    var fxVer = hostOptions.TargetFramework.Version;
+
+                    if (hostOptions.TargetFramework.Identifier == ".NETFramework")
+                    {
+                        fxId = "NET";
+                    }
+                    else if (hostOptions.TargetFramework.Identifier == "Asp.Net")
+                    {
+                        fxId = "ASPNET";
+                    }
+                    else if (hostOptions.TargetFramework.Identifier == "Asp.NetCore")
+                    {
+                        fxId = "ASPNETCORE";
+                    }
+                    else if (hostOptions.TargetFramework.Identifier == ".NETPortable")
+                    {
+                        fxId = "PORTABLE";
+                    }
+                    else if (hostOptions.TargetFramework.Identifier == ".NETCore")
+                    {
+                        fxId = "NETCORE";
+                    }
+                    else if (hostOptions.TargetFramework.Identifier == "WindowsPhone")
+                    {
+                        fxId = "WP";
+                    }
+                    else if (hostOptions.TargetFramework.Identifier == "MonoTouch")
+                    {
+                        fxId = "IOS";
+                    }
+                    else if (hostOptions.TargetFramework.Identifier == "MonoAndroid")
+                    {
+                        fxId = "ANDROID";
+                    }
+                    else if (hostOptions.TargetFramework.Identifier == "Silverlight")
+                    {
+                        fxId = "SL";
+                    }
+                    else
+                    {
+                        fxId = hostOptions.TargetFramework.Identifier;
+                    }
+	        	    
+                    fxDefs.Add(string.Format("{0}{1}{2}", new object[] {fxId, fxVer.Major.ToString(), fxVer.Minor.ToString()}));
+                    if (fxVer.Build > 0) {
+                        fxDefs.Add(string.Format("{0}{1}{2}{3}", new object[] {fxId, fxVer.Major.ToString(), fxVer.Minor.ToString(), fxVer.Build.ToString()}));
+                    }
+
+                    File.WriteAllLines(Path.Combine(outDir, "fxdefines.txt"), fxDefs);
                     File.WriteAllLines(Path.Combine(outDir, "version.txt"), new[] { host.Project.Version.Version.ToString() });
                     File.WriteAllLines(Path.Combine(outDir, "name.txt"), new[] { host.Project.Name });
+                    File.WriteAllLines(Path.Combine(outDir, "fxmoniker.txt"), new[] { hostOptions.TargetFramework.ToString() });
                 }
 
                 return 0;
