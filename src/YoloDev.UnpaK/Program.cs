@@ -228,8 +228,9 @@ namespace YoloDev.UnpaK
                         fxDefs.Add(string.Format("{0}{1}{2}{3}", new object[] {fxId, fxVer.Major.ToString(), fxVer.Minor.ToString(), fxVer.Build.ToString()}));
                     }
 
-                    File.WriteAllLines(Path.Combine(outDir, "fxdefines.txt"), fxDefs);
+                    File.WriteAllLines(Path.Combine(outDir, "defines.txt"), fxDefs);
                     File.WriteAllLines(Path.Combine(outDir, "version.txt"), new[] { host.Project.Version.Version.ToString() });
+                    File.WriteAllLines(Path.Combine(outDir, "full-version.txt"), new[] { host.Project.Version.ToString() });
                     File.WriteAllLines(Path.Combine(outDir, "name.txt"), new[] { host.Project.Name });
                     File.WriteAllLines(Path.Combine(outDir, "fxmoniker.txt"), new[] { hostOptions.TargetFramework.ToString() });
                 }
