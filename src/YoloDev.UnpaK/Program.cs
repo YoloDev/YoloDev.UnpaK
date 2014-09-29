@@ -38,7 +38,7 @@ namespace YoloDev.UnpaK
                 }
                 else
                 {
-                    hostOptions.TargetFramework = _environment.TargetFramework;
+                    hostOptions.TargetFramework = _environment.RuntimeFramework;
                 }
 
                 hostOptions.Configuration = optionConfiguration.Value() ?? _environment.Configuration ?? "Debug";
