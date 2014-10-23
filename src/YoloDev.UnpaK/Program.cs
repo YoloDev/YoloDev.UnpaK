@@ -8,11 +8,18 @@ using Microsoft.Framework.Runtime.Common.CommandLine;
 
 namespace YoloDev.UnpaK
 {
-    public class Program(IAssemblyLoaderContainer container, IApplicationEnvironment environment, IServiceProvider serviceProvider)
+    public class Program
     {
-        private readonly IAssemblyLoaderContainer _container = container;
-        private readonly IApplicationEnvironment _environment = environment;
-        private readonly IServiceProvider _serviceProvider = serviceProvider;
+        private readonly IAssemblyLoaderContainer _container;
+        private readonly IApplicationEnvironment _environment;
+        private readonly IServiceProvider _serviceProvider;
+        
+        public Program(IAssemblyLoaderContainer container, IApplicationEnvironment environment, IServiceProvider serviceProvider)
+        {
+            _container = container;
+            _environment = environment;
+            _serviceProvider = serviceProvider;
+        }
 
         public int Main(string[] args)
         {
