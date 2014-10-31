@@ -13,12 +13,7 @@
     "net451": { },
     "aspnetcore50": {
       "dependencies": {
-        "System.Console": "4.0.0.0",
-        "System.Threading.Tasks": "4.0.10.0",
-        "System.IO": "4.0.10.0",
-        "System.IO.FileSystem": "4.0.10.0",
-        "System.Linq": "4.0.0.0",
-        "System.Collections": "4.0.10.0"
+        "System.Console": "4.0.0.0"
       }
     }
   }
