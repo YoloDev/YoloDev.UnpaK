@@ -17,4 +17,4 @@ environment:
   #BUILD_NUMBER: "$(build)"
 
 artifacts:
-  - path: artifacts\build\*-%K_BUILD_VERSION%.nupkg
+  - path: artifacts\build\*.nupkg
