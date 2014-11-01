@@ -4,9 +4,9 @@
   "description": "Unpack K projects for bootstrapping compilers",
 
   "dependencies": {
+    "Microsoft.Framework.CommandLineUtils": { "version": "1.0.0-*", "type": "build" },
     "Microsoft.Framework.Runtime": "1.0.0-*",
-    "Microsoft.Framework.Runtime.Interfaces": "1.0.0-*",
-    "Microsoft.Framework.CommandLineUtils": "1.0.0-*"
+    "Microsoft.Framework.Runtime.Interfaces": { "version": "1.0.0-*", "type": "build" }
   },
 
   "frameworks": {
