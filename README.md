@@ -5,4 +5,4 @@ YoloDev.UnpaK
 ![download count](http://img.shields.io/myget/yolodev/dt/YoloDev.UnpaK.svg?style=flat)
 ![repo size](https://reposs.herokuapp.com/?path=YoloDev/YoloDev.UnpaK&style=flat)
 
-Unpack K projects for bootstrapping compilers
+Unpack K projects for bootstrapping compilers. Use in FSharpSupport.
