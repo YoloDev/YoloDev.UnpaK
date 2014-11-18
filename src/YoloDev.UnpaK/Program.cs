@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Xml.Linq;
 using Microsoft.Framework.Runtime;
 using Microsoft.Framework.Runtime.Common.CommandLine;
 
@@ -13,7 +14,7 @@ namespace YoloDev.UnpaK
         private readonly IAssemblyLoaderContainer _container;
         private readonly IApplicationEnvironment _environment;
         private readonly IServiceProvider _serviceProvider;
-        
+
         public Program(IAssemblyLoaderContainer container, IApplicationEnvironment environment, IServiceProvider serviceProvider)
         {
             _container = container;
@@ -27,42 +28,114 @@ namespace YoloDev.UnpaK
             app.Name = "YoloDev.UnpaK";
             var optionPackages = app.Option("--packages <PACKAGE_DIR>", "Directory containing packages", CommandOptionType.SingleValue);
             var optionConfiguration = app.Option("--configuration <CONFIGURATION>", "The configuration to run under", CommandOptionType.SingleValue);
-            var optionANIs = app.Option("--ani", "Forces ANI assemblies to be listed in anis.txt and not in references.txt", CommandOptionType.NoValue);
             var optionFx = app.Option("--framework <FRAMEWORK>", "The framework to target (overrides the default of Asp.Net 5.0)", CommandOptionType.SingleValue);
             var optionOut = app.Option("-o|--out <OUT_DIR>", "Output directory", CommandOptionType.SingleValue);
             app.HelpOption("-?|-h|--help");
             app.VersionOption("--version", GetVersion());
 
+            app.Command("proj", pApp =>
+            {
+                var optionExt = pApp.Option("-e|--extension <PROJECT_EXTENSION>", "Project extension (default to 'proj')", CommandOptionType.SingleValue);
+                var optionImports = pApp.Option("-i|--import <IMPORT>", "Import targets to project", CommandOptionType.MultipleValue);
+
+                pApp.OnExecute(() =>
+                {
+                    var packagesDirectory = optionPackages.Value();
+                    var targetFramework = optionFx.HasValue() ? Project.ParseFrameworkName(optionFx.Value()) : _environment.RuntimeFramework;
+                    var configuration = optionConfiguration.Value() ?? _environment.Configuration ?? "Debug";
+                    var applicationBaseDirectory = _environment.ApplicationBasePath;
+                    var extension = optionExt.HasValue() ? optionExt.Value() : "proj";
+
+                    var info = Worker.Process(
+                        packagesDirectory,
+                        targetFramework,
+                        configuration,
+                        applicationBaseDirectory,
+                        _serviceProvider,
+                        _container);
+
+
+                    var objDir = Path.Combine(info.Base, "obj", info.Configuration);
+                    var objDllDir = Path.Combine(objDir, "dll");
+                    if (!Directory.Exists(objDllDir))
+                        Directory.CreateDirectory(objDllDir);
+
+                    foreach (var ani in info.Dependencies.Where(d => d.IsANI))
+                        ani.CopyTo(Path.Combine(objDllDir, ani.Name + ".dll"));
+
+                    var ns = XNamespace.Get("http://schemas.microsoft.com/developer/msbuild/2003");
+                    var propGroup = new XElement(("PropertyGroup"),
+                        new XElement(("Configuration"), info.Configuration),
+                        new XElement(("Platform"), "AnyCPU"),
+                        new XElement(("SchemaVersion"), "2.0"),
+                        new XElement(("ProjectGuid"), Guid.NewGuid().ToString()),
+                        new XElement(("DebugSymbols"), "true"),
+                        new XElement(("DebugType"), "full"),
+                        new XElement(("Optimize"), "false"),
+                        new XElement(("Tailcalls"), "false"),
+                        new XElement(("OutputPath"), "bin/Debug"),
+                        new XElement(("DefineConstants"), string.Join(";", info.Defines)),
+                        new XElement(("OutputType"), "Library"),
+                        new XElement(("Name"), info.Name),
+                        new XElement(("RootNamespace"), info.Name),
+                        new XElement(("AssemblyName"), info.Name),
+                        new XElement(("TargetFrameworkVersion"), "v" + info.Framework.Version.ToString(2)),
+                        new XElement(("WarningLevel"), "3"));
+                    var imports = optionImports.Values.Select(i => new XElement(("Import"), new XAttribute(("Project"), i)));
+                    var srcGroup = new XElement(("ItemGroup"),
+                        info.Sources.Select(s =>
+                        {
+                            if (s.Kind == SourceInfo.SourceKind.Src)
+                            {
+                                return new XElement(("Compile"), new XAttribute("Include", s.Path));
+                            }
+                            else
+                            {
+                                return new XElement(("Compile"), new XAttribute("Include", s.Path));
+                            }
+                        }));
+                    var refs = new XElement(("ItemGroup"),
+                        info.Dependencies.Select(r => new XElement(("Reference"), new XAttribute(("Include"), r.Name),
+                            new XElement(("HintPath"), !r.IsFile ? Path.Combine(objDllDir, r.Name + ".dll") : r.Path))));
+
+                    var root = new XElement(("Project"),
+                        new XAttribute(("ToolsVersion"), "4.0"),
+                        new XAttribute(("DefaultTargets"), "Build"),
+                        propGroup,
+                        imports,
+                        srcGroup,
+                        refs);
+
+                    root.SetDefaultXmlNamespace(ns);
+
+                    var doc = new XDocument(root);
+
+                    var fileName = Path.Combine(info.Base, info.Name + "." + extension);
+
+                    if (File.Exists(fileName))
+                        File.Delete(fileName);
+
+                    using (var f = File.OpenWrite(fileName))
+                        doc.Save(f);
+
+                    return 0;
+                });
+            });
+
             app.OnExecute(() =>
             {
-                var hostOptions = new DefaultHostOptions();
-                hostOptions.WatchFiles = false;
-                hostOptions.PackageDirectory = optionPackages.Value();
+                var packagesDirectory = optionPackages.Value();
+                var targetFramework = optionFx.HasValue() ? Project.ParseFrameworkName(optionFx.Value()) : _environment.RuntimeFramework;
+                var configuration = optionConfiguration.Value() ?? _environment.Configuration ?? "Debug";
+                var applicationBaseDirectory = _environment.ApplicationBasePath;
 
-                if (optionFx.HasValue())
-                {
-                    hostOptions.TargetFramework = Project.ParseFrameworkName(optionFx.Value());
-                }
-                else
-                {
-                    hostOptions.TargetFramework = _environment.RuntimeFramework;
-                }
-
-                hostOptions.Configuration = optionConfiguration.Value() ?? _environment.Configuration ?? "Debug";
-                hostOptions.ApplicationBaseDirectory = _environment.ApplicationBasePath;
-
-                var host = new DefaultHost(hostOptions, _serviceProvider);
-                if (host.Project == null)
-                    return -1;
-
-                if (string.IsNullOrEmpty(host.Project.Name))
-                {
-                    hostOptions.ApplicationName = Path.GetFileName(hostOptions.ApplicationBaseDirectory);
-                }
-                else
-                {
-                    hostOptions.ApplicationName = host.Project.Name;
-                }
+                var info = Worker.Process(
+                    packagesDirectory,
+                    targetFramework,
+                    configuration,
+                    applicationBaseDirectory,
+                    _serviceProvider,
+                    _container);
 
                 var outDir = optionOut.Value();
                 if (string.IsNullOrWhiteSpace(outDir))
@@ -108,42 +181,31 @@ namespace YoloDev.UnpaK
                     throw;
                 }
 
-
-                using (host.AddLoaders(_container))
+                foreach (var fileEntry in Directory.EnumerateFileSystemEntries(outDir))
                 {
-                    host.Initialize();
-                    var libraryManager = (ILibraryManager)host.ServiceProvider.GetService(typeof(ILibraryManager));
-                    var sources = host.Project.SourceFiles;
-                    var deps = libraryManager.GetLibraryInformation(hostOptions.ApplicationName).Dependencies.Select(d => new {
-                        References = libraryManager.GetAllExports(d).MetadataReferences,
-                        Sources = libraryManager.GetLibraryExport(d).SourceReferences,
-                        Name = d });
+                    if (Directory.Exists(fileEntry))
+                        Directory.Delete(fileEntry, true);
+                    else
+                        File.Delete(fileEntry);
+                }
 
-                    foreach (var fileEntry in Directory.EnumerateFileSystemEntries(outDir))
+                var srcPath = Path.Combine(outDir, "src");
+                var libPath = Path.Combine(outDir, "lib");
+                var extSrcPath = Path.Combine(libPath, "src");
+                var srcPaths = new List<string>();
+                var libPaths = new List<string>();
+                var aniPaths = new List<string>();
+                var fxDefs = new List<string>();
+
+                Directory.CreateDirectory(srcPath);
+                Directory.CreateDirectory(libPath);
+
+                foreach (var source in info.Sources)
+                {
+                    if (source.Kind == SourceInfo.SourceKind.Src)
                     {
-                        if (Directory.Exists(fileEntry))
-                            Directory.Delete(fileEntry, true);
-                        else
-                            File.Delete(fileEntry);
-                    }
-
-                    var srcPath = Path.Combine(outDir, "src");
-                    var libPath = Path.Combine(outDir, "lib");
-                    var extSrcPath = Path.Combine(libPath, "src");
-                    var srcPaths = new List<string>();
-                    var libPaths = new List<string>();
-                    var aniPaths = new List<string>();
-                    var fxDefs = new List<string>();
-					
-                    Directory.CreateDirectory(srcPath);
-                    Directory.CreateDirectory(libPath);
-
-                    foreach (var source in sources)
-                    {
-                        var original = new FileInfo(source);
-                        var relative = PathUtil.GetRelativePath(hostOptions.ApplicationBaseDirectory, original.FullName);
-
-                        var newPath = Path.Combine(srcPath, relative);
+                        var original = new FileInfo(Path.Combine(info.Base, source.Path));
+                        var newPath = Path.Combine(srcPath, source.Path);
                         var pathDir = Path.GetDirectoryName(newPath);
                         if (!Directory.Exists(pathDir))
                             Directory.CreateDirectory(pathDir);
@@ -151,170 +213,47 @@ namespace YoloDev.UnpaK
                         var newFile = original.CopyTo(newPath);
                         srcPaths.Add(newFile.FullName);
                     }
+                    else
+                    {
+                        var file = Path.Combine(extSrcPath, source.Lib, Path.GetFileName(source.Path));
+                        var dir = Path.GetDirectoryName(file);
+                        if (!Directory.Exists(dir))
+                            Directory.CreateDirectory(dir);
 
-                    foreach (var dep in deps)
-                    {
-                        foreach(var source in dep.Sources)
-                        {
-                            var file = Path.Combine(extSrcPath, dep.Name, Path.GetFileName(source.Name));
-                            var dir = Path.GetDirectoryName(file);
-                            if (!Directory.Exists(dir))
-                                Directory.CreateDirectory(dir);
+                        File.Copy(source.Path, file);
+                        srcPaths.Add(file);
+                    }
+                }
 
-                            File.Copy(source.Name, file);
-                            srcPaths.Add(file);
-                        }
+                foreach (var dep in info.Dependencies)
+                {
+                    var depPath = Path.Combine(libPath, dep.Name + ".dll");
+                    dep.CopyTo(depPath);
 
-                        foreach (var mref in dep.References)
-                        {
-                            if (optionANIs.HasValue() && (mref is IMetadataEmbeddedReference))
-                            {
-                            	aniPaths.Add(Unpack(mref, libPath));
-                            }
-                            else
-                            {
-                                libPaths.Add(Unpack(mref, libPath));
-                            }
-                        }
-                    }
-
-                    File.WriteAllLines(Path.Combine(outDir, "sources.txt"), srcPaths);
-                    File.WriteAllLines(Path.Combine(outDir, "references.txt"), libPaths.Distinct());
-                    
-                    if (optionANIs.HasValue())
+                    if (dep.IsANI)
                     {
-                    	File.WriteAllLines(Path.Combine(outDir, "anis.txt"), aniPaths.Distinct());
-                    }
-                    
-                    var fxId = string.Empty;
-                    var fxVer = hostOptions.TargetFramework.Version;
-
-                    if (hostOptions.TargetFramework.Identifier == ".NETFramework")
-                    {
-                        fxId = "NET";
-                    }
-                    else if (hostOptions.TargetFramework.Identifier == "Asp.Net")
-                    {
-                        fxId = "ASPNET";
-                    }
-                    else if (hostOptions.TargetFramework.Identifier == "Asp.NetCore")
-                    {
-                        fxId = "ASPNETCORE";
-                    }
-                    else if (hostOptions.TargetFramework.Identifier == ".NETPortable")
-                    {
-                        fxId = "PORTABLE";
-                    }
-                    else if (hostOptions.TargetFramework.Identifier == ".NETCore")
-                    {
-                        fxId = "NETCORE";
-                    }
-                    else if (hostOptions.TargetFramework.Identifier == "WindowsPhone")
-                    {
-                        fxId = "WP";
-                    }
-                    else if (hostOptions.TargetFramework.Identifier == "MonoTouch")
-                    {
-                        fxId = "IOS";
-                    }
-                    else if (hostOptions.TargetFramework.Identifier == "MonoAndroid")
-                    {
-                        fxId = "ANDROID";
-                    }
-                    else if (hostOptions.TargetFramework.Identifier == "Silverlight")
-                    {
-                        fxId = "SL";
+                        aniPaths.Add(depPath);
                     }
                     else
                     {
-                        fxId = hostOptions.TargetFramework.Identifier;
+                        libPaths.Add(depPath);
                     }
-	        	    
-                    fxDefs.Add(string.Format("{0}{1}{2}", new object[] {fxId, fxVer.Major.ToString(), fxVer.Minor.ToString()}));
-                    if (fxVer.Build > 0) {
-                        fxDefs.Add(string.Format("{0}{1}{2}{3}", new object[] {fxId, fxVer.Major.ToString(), fxVer.Minor.ToString(), fxVer.Build.ToString()}));
-                    }
-
-                    File.WriteAllLines(Path.Combine(outDir, "defines.txt"), fxDefs);
-                    File.WriteAllLines(Path.Combine(outDir, "version.txt"), new[] { host.Project.Version.Version.ToString() });
-                    File.WriteAllLines(Path.Combine(outDir, "full-version.txt"), new[] { host.Project.Version.ToString() });
-                    File.WriteAllLines(Path.Combine(outDir, "name.txt"), new[] { host.Project.Name });
-                    File.WriteAllLines(Path.Combine(outDir, "fxmoniker.txt"), new[] { hostOptions.TargetFramework.ToString() });
                 }
+
+                fxDefs.AddRange(info.Defines);
+
+                File.WriteAllLines(Path.Combine(outDir, "sources.txt"), srcPaths);
+                File.WriteAllLines(Path.Combine(outDir, "references.txt"), libPaths.Distinct());
+                File.WriteAllLines(Path.Combine(outDir, "anis.txt"), aniPaths.Distinct());
+                File.WriteAllLines(Path.Combine(outDir, "defines.txt"), fxDefs);
+                File.WriteAllLines(Path.Combine(outDir, "version.txt"), new[] { info.Version.Version.ToString() });
+                File.WriteAllLines(Path.Combine(outDir, "full-version.txt"), new[] { info.Version.ToString() });
+                File.WriteAllLines(Path.Combine(outDir, "name.txt"), new[] { info.Name });
+                File.WriteAllLines(Path.Combine(outDir, "fxmoniker.txt"), new[] { info.Framework.ToString() });
 
                 return 0;
             });
             return app.Execute(args);
-        }
-
-        private static string Unpack(IMetadataReference reference, string dir)
-        {
-            var newPath = Path.Combine(dir, reference.Name + ".dll");
-
-            var fileRef = reference as IMetadataFileReference;
-            if (fileRef != null)
-            {
-                if (Path.GetExtension(fileRef.Name).ToLowerInvariant() == ".exe")
-                    newPath = Path.ChangeExtension(newPath, ".exe");
-
-                if (!File.Exists(newPath))
-                {
-                    File.Copy(fileRef.Path, newPath);
-                    var fileName = Path.GetFileNameWithoutExtension(fileRef.Path);
-                    foreach(var file in Directory.EnumerateFiles(Path.GetDirectoryName(fileRef.Path), fileName + ".*"))
-                    {
-                        if(Path.GetFileNameWithoutExtension(file) == fileName)
-                        {
-                            var ext = Path.GetExtension(file);
-                            var newFilePath = Path.Combine(dir, reference.Name + ext);
-                            if (!File.Exists(newFilePath))
-                                File.Copy(file, newFilePath);
-                        }
-                    }
-                }
-                return newPath;
-            }
-
-            if (File.Exists(newPath))
-                return newPath;
-
-            var eRef = reference as IMetadataEmbeddedReference;
-            if (eRef != null)
-            {
-                File.WriteAllBytes(newPath, eRef.Contents);
-                return newPath;
-            }
-
-            var projRef = reference as IMetadataProjectReference;
-            if (projRef != null)
-            {
-                using (var fs = File.Create(newPath))
-                {
-                    projRef.EmitReferenceAssembly(fs);
-                }
-                return newPath;
-            }
-
-            throw new ArgumentException(string.Format("Invalid reference type {0}", reference.GetType()));
-        }
-
-        private static void ThrowEntryPointNotfoundException(
-            DefaultHost host,
-            string applicationName,
-            Exception innerException)
-        {
-
-            var compilationException = innerException as CompilationException;
-
-            if (compilationException != null)
-            {
-                throw new InvalidOperationException(
-                    string.Join(Environment.NewLine, compilationException.Errors));
-            }
-
-            throw new InvalidOperationException(
-                    string.Format("Unable to load application '{0}'.",
-                    applicationName), innerException);
         }
 
         private static string GetVersion()

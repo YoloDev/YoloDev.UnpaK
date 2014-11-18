@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Xml.Linq;
 
 namespace YoloDev.UnpaK
 {
@@ -25,6 +26,14 @@ namespace YoloDev.UnpaK
                 return null;
 
             return "." + fullPath.Substring(rootPath.Length);
+        }
+
+        public static void SetDefaultXmlNamespace(this XElement xelem, XNamespace xmlns)
+        {
+            if (xelem.Name.NamespaceName == string.Empty)
+                xelem.Name = xmlns + xelem.Name.LocalName;
+            foreach (var e in xelem.Elements())
+                e.SetDefaultXmlNamespace(xmlns);
         }
     }
 }

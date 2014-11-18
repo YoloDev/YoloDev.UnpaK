@@ -1,0 +1,281 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration>Debug</Configuration>
+    <Platform>AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>7969ee4e-771a-4f8e-9ea0-b20b5c622d47</ProjectGuid>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <Tailcalls>false</Tailcalls>
+    <OutputPath>bin/Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE;ASPNET50</DefineConstants>
+    <OutputType>Library</OutputType>
+    <Name>YoloDev.UnpaK</Name>
+    <RootNamespace>YoloDev.UnpaK</RootNamespace>
+    <AssemblyName>YoloDev.UnpaK</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <WarningLevel>3</WarningLevel>
+  </PropertyGroup>
+  <Import Project="C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Compile Include=".\DependencyInfo.cs" />
+    <Compile Include=".\PathUtil.cs" />
+    <Compile Include=".\Program.cs" />
+    <Compile Include=".\ProjectInfo.cs" />
+    <Compile Include=".\ResourceInfo.cs" />
+    <Compile Include=".\SourceInfo.cs" />
+    <Compile Include=".\Worker.cs" />
+    <Compile Include="C:\Users\Aleksander\.kpm\packages\Microsoft.Framework.CommandLineUtils\1.0.0-beta2-10709\shared\AnsiConsole.cs" />
+    <Compile Include="C:\Users\Aleksander\.kpm\packages\Microsoft.Framework.CommandLineUtils\1.0.0-beta2-10709\shared\CommandArgument.cs" />
+    <Compile Include="C:\Users\Aleksander\.kpm\packages\Microsoft.Framework.CommandLineUtils\1.0.0-beta2-10709\shared\CommandLineApplication.cs" />
+    <Compile Include="C:\Users\Aleksander\.kpm\packages\Microsoft.Framework.CommandLineUtils\1.0.0-beta2-10709\shared\CommandOption.cs" />
+    <Compile Include="C:\Users\Aleksander\.kpm\packages\Microsoft.Framework.CommandLineUtils\1.0.0-beta2-10709\shared\CommandOptionType.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Framework.CommandLineUtils">
+      <HintPath>C:\Users\Aleksander\.kpm\packages\Microsoft.Framework.CommandLineUtils\1.0.0-beta2-10709\lib\aspnet50\Microsoft.Framework.CommandLineUtils.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.3\mscorlib.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.3\System.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.3\System.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.3\Microsoft.CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime">
+      <HintPath>C:\Users\Aleksander\.kpm\packages\Microsoft.Framework.Runtime\1.0.0-beta2-10709\lib\aspnet50\Microsoft.Framework.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.Infrastructure.IServiceProviderLocator">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.Infrastructure.IServiceProviderLocator.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.AssemblyNeutralAttribute">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.AssemblyNeutralAttribute.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.Infrastructure.CallContextServiceLocator">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.Infrastructure.CallContextServiceLocator.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.IFileMonitor">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.IFileMonitor.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.IAssemblyLoadContextAccessor">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.IAssemblyLoadContextAccessor.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.IAssemblyLoadContext">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.IAssemblyLoadContext.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.IAssemblyNeutralInterfaceCache">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.IAssemblyNeutralInterfaceCache.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.DependencyInjection.ServiceLookup.IServiceManifest">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.DependencyInjection.ServiceLookup.IServiceManifest.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.ISourceFileReference">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.ISourceFileReference.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.ISourceReference">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.ISourceReference.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.IMetadataEmbeddedReference">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.IMetadataEmbeddedReference.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.IMetadataReference">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.IMetadataReference.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.IMetadataFileReference">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.IMetadataFileReference.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.IDiagnosticResult">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.IDiagnosticResult.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.IMetadataProjectReference">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.IMetadataProjectReference.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.ILibraryInformation">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.ILibraryInformation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.ILibraryExport">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.ILibraryExport.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.ILibraryExportProvider">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.ILibraryExportProvider.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.ILibraryKey">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.ILibraryKey.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.IAssemblyLoader">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.IAssemblyLoader.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.IAssemblyLoaderContainer">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.IAssemblyLoaderContainer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.IFileWatcher">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.IFileWatcher.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.IApplicationShutdown">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.IApplicationShutdown.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.ILibraryManager">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.ILibraryManager.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.IAssemblyLoadContextFactory">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.IAssemblyLoadContextFactory.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.IApplicationEnvironment">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.IApplicationEnvironment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reflection.Metadata">
+      <HintPath>C:\Users\Aleksander\.kpm\packages\System.Reflection.Metadata\1.0.17-beta\lib\portable-net45+win8\System.Reflection.Metadata.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.Loader">
+      <HintPath>C:\Users\Aleksander\.kpm\packages\Microsoft.Framework.Runtime.Loader\1.0.0-beta2-10709\lib\aspnet50\Microsoft.Framework.Runtime.Loader.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>C:\Users\Aleksander\.kpm\packages\Newtonsoft.Json\6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Collections">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.3\Facades\System.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.3\Facades\System.IO.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Compression">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.3\System.IO.Compression.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Compression.FileSystem">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.3\System.IO.Compression.FileSystem.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.3\Facades\System.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.3\System.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.3\System.Xml.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.3\mscorlib.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.3\System.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.3\System.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.3\Microsoft.CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Collections.Immutable">
+      <HintPath>C:\Users\Aleksander\.kpm\packages\System.Collections.Immutable\1.1.32-beta\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.Interfaces">
+      <HintPath>C:\Users\Aleksander\.kpm\packages\Microsoft.Framework.Runtime.Interfaces\1.0.0-beta2-10709\lib\aspnet50\Microsoft.Framework.Runtime.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.AssemblyNeutralAttribute">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.AssemblyNeutralAttribute.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.IApplicationEnvironment">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.IApplicationEnvironment.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.IApplicationShutdown">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.IApplicationShutdown.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.IAssemblyLoadContext">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.IAssemblyLoadContext.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.IAssemblyLoadContextAccessor">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.IAssemblyLoadContextAccessor.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.IAssemblyLoadContextFactory">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.IAssemblyLoadContextFactory.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.IAssemblyLoader">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.IAssemblyLoader.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.IAssemblyLoaderContainer">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.IAssemblyLoaderContainer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.IAssemblyNeutralInterfaceCache">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.IAssemblyNeutralInterfaceCache.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.IDiagnosticResult">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.IDiagnosticResult.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.IFileMonitor">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.IFileMonitor.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.IFileWatcher">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.IFileWatcher.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.IMetadataReference">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.IMetadataReference.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.ISourceReference">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.ISourceReference.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.ILibraryExport">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.ILibraryExport.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.ILibraryKey">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.ILibraryKey.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.ILibraryExportProvider">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.ILibraryExportProvider.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.ILibraryInformation">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.ILibraryInformation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.ILibraryManager">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.ILibraryManager.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.IMetadataEmbeddedReference">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.IMetadataEmbeddedReference.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.IMetadataFileReference">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.IMetadataFileReference.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.IMetadataProjectReference">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.IMetadataProjectReference.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.ISourceFileReference">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.ISourceFileReference.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.Infrastructure.IServiceProviderLocator">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.Infrastructure.IServiceProviderLocator.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Framework.Runtime.Infrastructure.CallContextServiceLocator">
+      <HintPath>C:\Users\Aleksander\Documents\GitHub\YoloDev.UnpaK\src\YoloDev.UnpaK\obj\Debug\dll\Microsoft.Framework.Runtime.Infrastructure.CallContextServiceLocator.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.3\mscorlib.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.3\System.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.3\System.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.3\Microsoft.CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.3\mscorlib.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.3\System.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.3\System.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.3\Microsoft.CSharp.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>
