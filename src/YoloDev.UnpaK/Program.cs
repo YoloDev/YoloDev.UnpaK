@@ -73,6 +73,7 @@ namespace YoloDev.UnpaK
                         new XElement(("DebugType"), "full"),
                         new XElement(("Optimize"), "false"),
                         new XElement(("Tailcalls"), "false"),
+                        new XElement(("ImplicitlyExpandDesignTimeFacades"), "false"),
                         new XElement(("OutputPath"), "bin/Debug"),
                         new XElement(("DefineConstants"), string.Join(";", info.Defines)),
                         new XElement(("OutputType"), "Library"),
