@@ -29,13 +29,13 @@ namespace YoloDev.UnpaK
             var optionPackages = app.Option("--packages <PACKAGE_DIR>", "Directory containing packages", CommandOptionType.SingleValue);
             var optionConfiguration = app.Option("--configuration <CONFIGURATION>", "The configuration to run under", CommandOptionType.SingleValue);
             var optionFx = app.Option("--framework <FRAMEWORK>", "The framework to target (overrides the default of Asp.Net 5.0)", CommandOptionType.SingleValue);
-            var optionOut = app.Option("-o|--out <OUT_DIR>", "Output directory", CommandOptionType.SingleValue);
+            var rootDir = app.Option("-r|--root <ROOT_DIR>", "Root directory (containing project.json, default to current working dir)", CommandOptionType.SingleValue);
             app.HelpOption("-?|-h|--help");
             app.VersionOption("--version", GetVersion());
 
-            app.Command("proj", pApp =>
+            app.Command("props", pApp =>
             {
-                var optionExt = pApp.Option("-e|--extension <PROJECT_EXTENSION>", "Project extension (default to 'proj')", CommandOptionType.SingleValue);
+                var optionExt = pApp.Option("-e|--extension <PROJECT_EXTENSION>", "Project extension (default to 'props')", CommandOptionType.SingleValue);
                 var optionImports = pApp.Option("-i|--import <IMPORT>", "Import targets to project", CommandOptionType.MultipleValue);
 
                 pApp.OnExecute(() =>
@@ -43,8 +43,8 @@ namespace YoloDev.UnpaK
                     var packagesDirectory = optionPackages.Value();
                     var targetFramework = optionFx.HasValue() ? Project.ParseFrameworkName(optionFx.Value()) : _environment.RuntimeFramework;
                     var configuration = optionConfiguration.Value() ?? _environment.Configuration ?? "Debug";
-                    var applicationBaseDirectory = _environment.ApplicationBasePath;
-                    var extension = optionExt.HasValue() ? optionExt.Value() : "proj";
+                    var applicationBaseDirectory = rootDir.HasValue() ? rootDir.Value() : _environment.ApplicationBasePath;
+                    var extension = optionExt.HasValue() ? optionExt.Value() : "props";
 
                     var info = Worker.Process(
                         packagesDirectory,
@@ -122,137 +122,143 @@ namespace YoloDev.UnpaK
                 });
             });
 
-            app.OnExecute(() =>
+            app.Command("raw", rApp =>
             {
-                var packagesDirectory = optionPackages.Value();
-                var targetFramework = optionFx.HasValue() ? Project.ParseFrameworkName(optionFx.Value()) : _environment.RuntimeFramework;
-                var configuration = optionConfiguration.Value() ?? _environment.Configuration ?? "Debug";
-                var applicationBaseDirectory = _environment.ApplicationBasePath;
+                var optionOut = rApp.Option("-o|--out <OUT_DIR>", "Output directory", CommandOptionType.SingleValue);
 
-                var info = Worker.Process(
-                    packagesDirectory,
-                    targetFramework,
-                    configuration,
-                    applicationBaseDirectory,
-                    _serviceProvider,
-                    _container);
-
-                var outDir = optionOut.Value();
-                if (string.IsNullOrWhiteSpace(outDir))
+                rApp.OnExecute(() =>
                 {
-                    Console.WriteLine("out parameter is required");
-                    app.ShowHelp();
-                    return -1;
-                }
+                    var packagesDirectory = optionPackages.Value();
+                    var targetFramework = optionFx.HasValue() ? Project.ParseFrameworkName(optionFx.Value()) : _environment.RuntimeFramework;
+                    var configuration = optionConfiguration.Value() ?? _environment.Configuration ?? "Debug";
+                    var applicationBaseDirectory = rootDir.HasValue() ? rootDir.Value() : _environment.ApplicationBasePath;
 
-                try
-                {
-                    var fileInfo = new FileInfo(outDir);
-                    if (fileInfo.Exists && (fileInfo.Attributes & FileAttributes.Directory) != FileAttributes.Directory)
+                    var info = Worker.Process(
+                        packagesDirectory,
+                        targetFramework,
+                        configuration,
+                        applicationBaseDirectory,
+                        _serviceProvider,
+                        _container);
+
+                    var outDir = optionOut.Value();
+                    if (string.IsNullOrWhiteSpace(outDir))
                     {
-                        Console.WriteLine("{0} exists and is a file", outDir);
-                        return -1;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    if (ex is ArgumentException || ex is PathTooLongException || ex is NotSupportedException)
-                    {
-                        Console.WriteLine("{0} is not a valid path", outDir);
+                        Console.WriteLine("out parameter is required");
+                        app.ShowHelp();
                         return -1;
                     }
 
-                    throw;
-                }
-
-                try
-                {
-                    if (!Directory.Exists(outDir))
-                        Directory.CreateDirectory(outDir);
-                }
-                catch (Exception ex)
-                {
-                    if (ex is IOException || ex is UnauthorizedAccessException || ex is ArgumentException || ex is DirectoryNotFoundException || ex is NotSupportedException)
+                    try
                     {
-                        Console.WriteLine("Could not create directory {0}", outDir);
-                        return -1;
+                        var fileInfo = new FileInfo(outDir);
+                        if (fileInfo.Exists && (fileInfo.Attributes & FileAttributes.Directory) != FileAttributes.Directory)
+                        {
+                            Console.WriteLine("{0} exists and is a file", outDir);
+                            return -1;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        if (ex is ArgumentException || ex is PathTooLongException || ex is NotSupportedException)
+                        {
+                            Console.WriteLine("{0} is not a valid path", outDir);
+                            return -1;
+                        }
+
+                        throw;
                     }
 
-                    throw;
-                }
-
-                foreach (var fileEntry in Directory.EnumerateFileSystemEntries(outDir))
-                {
-                    if (Directory.Exists(fileEntry))
-                        Directory.Delete(fileEntry, true);
-                    else
-                        File.Delete(fileEntry);
-                }
-
-                var srcPath = Path.Combine(outDir, "src");
-                var libPath = Path.Combine(outDir, "lib");
-                var extSrcPath = Path.Combine(libPath, "src");
-                var srcPaths = new List<string>();
-                var libPaths = new List<string>();
-                var aniPaths = new List<string>();
-                var fxDefs = new List<string>();
-
-                Directory.CreateDirectory(srcPath);
-                Directory.CreateDirectory(libPath);
-
-                foreach (var source in info.Sources)
-                {
-                    if (source.Kind == SourceInfo.SourceKind.Src)
+                    try
                     {
-                        var original = new FileInfo(Path.Combine(info.Base, source.Path));
-                        var newPath = Path.Combine(srcPath, source.Path);
-                        var pathDir = Path.GetDirectoryName(newPath);
-                        if (!Directory.Exists(pathDir))
-                            Directory.CreateDirectory(pathDir);
-
-                        var newFile = original.CopyTo(newPath);
-                        srcPaths.Add(newFile.FullName);
+                        if (!Directory.Exists(outDir))
+                            Directory.CreateDirectory(outDir);
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        var file = Path.Combine(extSrcPath, source.Lib, Path.GetFileName(source.Path));
-                        var dir = Path.GetDirectoryName(file);
-                        if (!Directory.Exists(dir))
-                            Directory.CreateDirectory(dir);
+                        if (ex is IOException || ex is UnauthorizedAccessException || ex is ArgumentException || ex is DirectoryNotFoundException || ex is NotSupportedException)
+                        {
+                            Console.WriteLine("Could not create directory {0}", outDir);
+                            return -1;
+                        }
 
-                        File.Copy(source.Path, file);
-                        srcPaths.Add(file);
+                        throw;
                     }
-                }
 
-                foreach (var dep in info.Dependencies)
-                {
-                    var depPath = Path.Combine(libPath, dep.Name + ".dll");
-                    dep.CopyTo(depPath);
-
-                    if (dep.IsANI)
+                    foreach (var fileEntry in Directory.EnumerateFileSystemEntries(outDir))
                     {
-                        aniPaths.Add(depPath);
+                        if (Directory.Exists(fileEntry))
+                            Directory.Delete(fileEntry, true);
+                        else
+                            File.Delete(fileEntry);
                     }
-                    else
+
+                    var srcPath = Path.Combine(outDir, "src");
+                    var libPath = Path.Combine(outDir, "lib");
+                    var extSrcPath = Path.Combine(libPath, "src");
+                    var srcPaths = new List<string>();
+                    var libPaths = new List<string>();
+                    var aniPaths = new List<string>();
+                    var fxDefs = new List<string>();
+
+                    Directory.CreateDirectory(srcPath);
+                    Directory.CreateDirectory(libPath);
+
+                    foreach (var source in info.Sources)
                     {
-                        libPaths.Add(depPath);
+                        if (source.Kind == SourceInfo.SourceKind.Src)
+                        {
+                            var original = new FileInfo(Path.Combine(info.Base, source.Path));
+                            var newPath = Path.Combine(srcPath, source.Path);
+                            var pathDir = Path.GetDirectoryName(newPath);
+                            if (!Directory.Exists(pathDir))
+                                Directory.CreateDirectory(pathDir);
+
+                            var newFile = original.CopyTo(newPath);
+                            srcPaths.Add(newFile.FullName);
+                        }
+                        else
+                        {
+                            var file = Path.Combine(extSrcPath, source.Lib, Path.GetFileName(source.Path));
+                            var dir = Path.GetDirectoryName(file);
+                            if (!Directory.Exists(dir))
+                                Directory.CreateDirectory(dir);
+
+                            File.Copy(source.Path, file);
+                            srcPaths.Add(file);
+                        }
                     }
-                }
 
-                fxDefs.AddRange(info.Defines);
+                    foreach (var dep in info.Dependencies)
+                    {
+                        var depPath = Path.Combine(libPath, dep.Name + ".dll");
+                        dep.CopyTo(depPath);
 
-                File.WriteAllLines(Path.Combine(outDir, "sources.txt"), srcPaths);
-                File.WriteAllLines(Path.Combine(outDir, "references.txt"), libPaths.Distinct());
-                File.WriteAllLines(Path.Combine(outDir, "anis.txt"), aniPaths.Distinct());
-                File.WriteAllLines(Path.Combine(outDir, "defines.txt"), fxDefs);
-                File.WriteAllLines(Path.Combine(outDir, "version.txt"), new[] { info.Version.Version.ToString() });
-                File.WriteAllLines(Path.Combine(outDir, "full-version.txt"), new[] { info.Version.ToString() });
-                File.WriteAllLines(Path.Combine(outDir, "name.txt"), new[] { info.Name });
-                File.WriteAllLines(Path.Combine(outDir, "fxmoniker.txt"), new[] { info.Framework.ToString() });
+                        if (dep.IsANI)
+                        {
+                            aniPaths.Add(depPath);
+                        }
+                        else
+                        {
+                            libPaths.Add(depPath);
+                        }
+                    }
 
-                return 0;
+                    fxDefs.AddRange(info.Defines);
+
+                    File.WriteAllLines(Path.Combine(outDir, "sources.txt"), srcPaths);
+                    File.WriteAllLines(Path.Combine(outDir, "references.txt"), libPaths.Distinct());
+                    File.WriteAllLines(Path.Combine(outDir, "anis.txt"), aniPaths.Distinct());
+                    File.WriteAllLines(Path.Combine(outDir, "defines.txt"), fxDefs);
+                    File.WriteAllLines(Path.Combine(outDir, "version.txt"), new[] { info.Version.Version.ToString() });
+                    File.WriteAllLines(Path.Combine(outDir, "full-version.txt"), new[] { info.Version.ToString() });
+                    File.WriteAllLines(Path.Combine(outDir, "name.txt"), new[] { info.Name });
+                    File.WriteAllLines(Path.Combine(outDir, "fxmoniker.txt"), new[] { info.Framework.ToString() });
+
+                    return 0;
+                });
             });
+            
             return app.Execute(args);
         }
 
