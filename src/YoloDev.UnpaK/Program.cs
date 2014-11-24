@@ -119,6 +119,8 @@ namespace YoloDev.UnpaK
                     using (var f = File.OpenWrite(fileName))
                         doc.Save(f);
 
+                    Console.WriteLine("Successfully updated " + fileName);
+
                     return 0;
                 });
             });
