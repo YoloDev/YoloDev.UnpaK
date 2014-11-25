@@ -67,8 +67,6 @@ namespace YoloDev.UnpaK
                     var propGroup = new XElement(("PropertyGroup"),
                         new XElement(("Configuration"), info.Configuration),
                         new XElement(("Platform"), "AnyCPU"),
-                        new XElement(("SchemaVersion"), "2.0"),
-                        new XElement(("ProjectGuid"), Guid.NewGuid().ToString()),
                         new XElement(("DebugSymbols"), "true"),
                         new XElement(("DebugType"), "full"),
                         new XElement(("Optimize"), "false"),
