@@ -1,7 +1,8 @@
 ﻿using System;
 using System.IO;
-using System.IO.Path;
 using Microsoft.Framework.Runtime;
+
+using IOPath = System.IO.Path;
 
 namespace YoloDev.UnpaK
 {
@@ -38,20 +39,20 @@ namespace YoloDev.UnpaK
             var fileRef = _ref as IMetadataFileReference;
             if (fileRef != null)
             {
-                if (GetExtension(fileRef.Name).ToLowerInvariant() == ".exe")
-                    path = ChangeExtension(path, ".exe");
+                if (IOPath.GetExtension(fileRef.Name).ToLowerInvariant() == ".exe")
+                    path = IOPath.ChangeExtension(path, ".exe");
 
                 if (!File.Exists(path))
                 {
-                    var dir = GetDirectoryName(path);
+                    var dir = IOPath.GetDirectoryName(path);
                     File.Copy(fileRef.Path, path);
-                    var fileName = GetFileNameWithoutExtension(fileRef.Path);
-                    foreach (var file in Directory.EnumerateFiles(GetDirectoryName(fileRef.Path), fileName + ".*"))
+                    var fileName = IOPath.GetFileNameWithoutExtension(fileRef.Path);
+                    foreach (var file in Directory.EnumerateFiles(IOPath.GetDirectoryName(fileRef.Path), fileName + ".*"))
                     {
-                        if (GetFileNameWithoutExtension(file) == fileName)
+                        if (IOPath.GetFileNameWithoutExtension(file) == fileName)
                         {
-                            var ext = GetExtension(file);
-                            var newFilePath = Combine(dir, _ref.Name + ext);
+                            var ext = IOPath.GetExtension(file);
+                            var newFilePath = IOPath.Combine(dir, _ref.Name + ext);
                             if (!File.Exists(newFilePath))
                                 File.Copy(file, newFilePath);
                         }
