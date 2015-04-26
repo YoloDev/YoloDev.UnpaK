@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.IO;
 using Microsoft.Framework.Runtime;
+using Microsoft.Framework.Runtime.Compilation;
 
 using IOPath = System.IO.Path;
 

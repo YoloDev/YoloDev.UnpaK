@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Runtime.Versioning;
 using Microsoft.Framework.Runtime;
+using Microsoft.Framework.Runtime.Compilation;
 
 namespace YoloDev.UnpaK
 {
@@ -45,7 +46,7 @@ namespace YoloDev.UnpaK
             {
                 host.Initialize();
                 var libraryManager = (ILibraryManager)host.ServiceProvider.GetService(typeof(ILibraryManager));
-                var sourceFiles = host.Project.SourceFiles;
+                var sourceFiles = host.Project.Files.SourceFiles;
                 var dependencies = libraryManager.GetLibraryInformation(hostOptions.ApplicationName).Dependencies.Select(d => new
                 {
                     References = libraryManager.GetAllExports(d).MetadataReferences,

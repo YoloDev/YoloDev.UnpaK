@@ -1,11 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
 using Microsoft.Framework.Runtime;
+using Microsoft.Framework.Runtime.Compilation;
 using Microsoft.Framework.Runtime.Common.CommandLine;
+using Microsoft.Framework.Runtime.Helpers;
 
 namespace YoloDev.UnpaK
 {
@@ -41,7 +43,7 @@ namespace YoloDev.UnpaK
                 pApp.OnExecute(() =>
                 {
                     var packagesDirectory = optionPackages.Value();
-                    var targetFramework = optionFx.HasValue() ? Project.ParseFrameworkName(optionFx.Value()) : _environment.RuntimeFramework;
+                    var targetFramework = optionFx.HasValue() ? FrameworkNameHelper.ParseFrameworkName(optionFx.Value()) : _environment.RuntimeFramework;
                     var configuration = optionConfiguration.Value() ?? _environment.Configuration ?? "Debug";
                     var applicationBaseDirectory = rootDir.HasValue() ? rootDir.Value() : _environment.ApplicationBasePath;
                     var extension = optionExt.HasValue() ? optionExt.Value() : "props";
@@ -130,7 +132,7 @@ namespace YoloDev.UnpaK
                 rApp.OnExecute(() =>
                 {
                     var packagesDirectory = optionPackages.Value();
-                    var targetFramework = optionFx.HasValue() ? Project.ParseFrameworkName(optionFx.Value()) : _environment.RuntimeFramework;
+                    var targetFramework = optionFx.HasValue() ? FrameworkNameHelper.ParseFrameworkName(optionFx.Value()) : _environment.RuntimeFramework;
                     var configuration = optionConfiguration.Value() ?? _environment.Configuration ?? "Debug";
                     var applicationBaseDirectory = rootDir.HasValue() ? rootDir.Value() : _environment.ApplicationBasePath;
 

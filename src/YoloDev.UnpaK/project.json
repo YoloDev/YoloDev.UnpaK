@@ -1,4 +1,4 @@
-﻿{
+{
   "version": "1.0.0-alpha4-*",
   "authors": ["Alxandr"],
   "description": "Unpack K projects for bootstrapping compilers",
@@ -6,12 +6,13 @@
   "dependencies": {
     "Microsoft.Framework.CommandLineUtils": { "version": "1.0.0-*", "type": "build" },
     "Microsoft.Framework.Runtime": "1.0.0-*",
-    "Microsoft.Framework.Runtime.Interfaces": { "version": "1.0.0-*", "type": "build" }
+    "Microsoft.Framework.Runtime.Interfaces": { "version": "1.0.0-*", "type": "build" },
+    "System.Collections.Immutable": "1.1.33-*"
   },
 
   "frameworks": {
-    "aspnet50": { },
-    "aspnetcore50": {
+    "dnx451": { },
+    "dnxcore50": {
       "dependencies": {
         "System.Console": "4.0.0-*"
       }
